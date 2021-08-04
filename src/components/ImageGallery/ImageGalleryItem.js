@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./ImageGalleryItem.module.css";
 
-const ImageGalleryItem = ({ picture, openModal }) => {
+export default function ImageGalleryItem({ picture, openModal }) {
   const { webformatURL, tags } = picture;
 
   return (
@@ -14,9 +14,7 @@ const ImageGalleryItem = ({ picture, openModal }) => {
       />
     </li>
   );
-};
-
-export default ImageGalleryItem;
+}
 
 ImageGalleryItem.propTypes = {
   image: PropTypes.shape({

@@ -2,7 +2,7 @@ import React from "react";
 import ImageGalleryItem from "./ImageGalleryItem";
 import styles from "./ImageGallery.module.css";
 
-const ImageGallery = ({ pictures, openModal }) => {
+export default function ImageGallery({ pictures, openModal }) {
   return (
     <ul className={styles.ImageGallery}>
       {pictures.map((picture) => (
@@ -14,6 +14,4 @@ const ImageGallery = ({ pictures, openModal }) => {
       ))}
     </ul>
   );
-};
-
-export default ImageGallery;
+}

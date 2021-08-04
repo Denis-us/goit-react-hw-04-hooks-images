@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Button.module.css";
 
-const Button = ({ fetchImages }) => {
+export default function Button({ fetchImages }) {
   return (
     <div className={styles.ButtonContainer}>
       <button type="button" className={styles.Button} onClick={fetchImages}>
@@ -9,6 +9,4 @@ const Button = ({ fetchImages }) => {
       </button>
     </div>
   );
-};
-
-export default Button;
+}

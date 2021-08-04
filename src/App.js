@@ -1,118 +1,123 @@
 import "./App.css";
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import Loader from "react-loader-spinner";
 
 import * as fetch from "./Fetch/Fetch";
 import Searchbar from "./components/Searchbar/Searchbar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Modal from "./components/Modal/Modal";
 import Button from "./components/Button/Button";
+import CustomLoader from "./components/Loader/Loader";
 
-const CustomLoader = () => {
-  return (
-    <div class="Loader">
-      <Loader
-        type="Bars"
-        color="#00BFFF"
-        height={100}
-        width={100}
-        timeout={3000}
-      />
-    </div>
-  );
-};
+export default function App() {
+  const [search, setSearch] = useState("");
+  const [pictures, setPictures] = useState([]);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [largeImageId, setLargeImageId] = useState(null);
+  const [largeImage, setLargeImage] = useState([]);
 
-class App extends Component {
-  state = {
-    search: "",
-    pictures: [],
-    error: null,
-    currentPage: 1,
-    loading: false,
-    showModal: false,
-    largeImageId: null,
-    largeImage: [],
-  };
+  // useEffect(() => {
+  //   if (!query) return;
+  //   const fetchImages = async () => {
+  //     try {
+  //       const request = await apiService(query, page);
+  //       if (request.length === 0) {
+  //         return setError(`No results were found for ${query}!`);
+  //       }
+  //       setImages(prevImages => [...prevImages, ...request]);
+  //     } catch (error) {
+  //       setError('Something went wrong. Try again.');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-  componentDidMount() {}
+  //   fetchImages();
+  // }, [page, query]);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.search !== this.state.search) {
-      this.fetchImages(false);
+  useEffect(() => {
+    if (search === "") {
+      return;
     }
-  }
 
-  onSearch = (search) => {
-    this.setState({ search, pictures: [], currentPage: 1 });
+    fetchImages();
+  }, [search]);
+
+  const onSearch = (search) => {
+    setSearch(search);
+    setPictures([]);
+    setCurrentPage(1);
   };
 
-  fetchImagesWithScroll = () => {
-    this.fetchImages(true);
+  const fetchImagesWithScroll = () => {
+    fetchImages(true);
   };
 
-  fetchImages = () => {
-    this.setState({ loading: true });
-    const { search, currentPage } = this.state;
+  const fetchImages = (scroll) => {
+    setLoading(true);
 
     fetch
       .fetchImages(search, currentPage)
       .then((pictures) => {
-        this.setState((state) => ({
-          pictures: [...state.pictures, ...pictures],
-          currentPage: state.currentPage + 1,
-        }));
-        return pictures[0];
+        setPictures((prevPictures) => [...prevPictures, ...pictures]);
+        setCurrentPage(currentPage + 1);
       })
+
+      // return (pictures[0])
+      // });
       .catch((error) => {
-        this.setState({ error });
+        setError("Ошибка");
+      })
+      .then(() => {
+        if (scroll) {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: "smooth",
+          });
+        }
       })
       .finally(() => {
-        this.setState({ loading: false });
+        setLoading(false);
       });
   };
 
-  findPicture = () => {
-    const largeImg = this.state.pictures.find((pictures) => {
-      return pictures.id === this.state.largeImageId;
+  const findPicture = () => {
+    const largeImg = pictures.find((pictures) => {
+      return pictures.id === largeImageId;
     });
     return largeImg;
   };
 
-  openModal = (e) => {
-    this.setState({
-      showModal: true,
-      largeImageId: Number(e.currentTarget.id),
-    });
+  // const openModal = (e) => {
+  //     setShowModal(true),
+  //     setLargeImageId(Number(e.currentTarget.id)),
+  // };
+
+  const onOpenModal = (e) => {
+    largeImageId(e.target.dataset.source);
+    toggleModal();
   };
 
-  closeModal = () => this.setState({ showModal: false });
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
 
-  render() {
-    const { loading, pictures, showModal, largeImageId } = this.state;
-
-    return (
-      <div class="App">
-        <Searchbar onSubmit={this.onSearch} />
-        <ImageGallery openModal={this.openModal} pictures={pictures} />
-        {loading && <CustomLoader />}
-        {pictures.length > 0 && (
-          <Button fetchImages={this.fetchImagesWithScroll} />
-        )}
-        {showModal && (
-          <Modal largeImageId={largeImageId} onClose={this.closeModal}>
-            <img
-              src={this.findPicture().largeImageURL}
-              alt={this.findPicture().tags}
-            />
-          </Modal>
-        )}
-        <ToastContainer autoClose={3000} />
-      </div>
-    );
-  }
+  return (
+    <div class="App">
+      <Searchbar onSubmit={onSearch} />
+      <ImageGallery openModal={onOpenModal} pictures={pictures} />
+      {loading && <CustomLoader />}
+      {pictures.length > 0 && <Button fetchImages={fetchImagesWithScroll} />}
+      {showModal && (
+        <Modal onToggleModal={toggleModal}>
+          <img src={findPicture().largeImageURL} alt={findPicture().tags} />
+        </Modal>
+      )}
+      <ToastContainer autoClose={3000} />
+    </div>
+  );
 }
-
-export default App;
