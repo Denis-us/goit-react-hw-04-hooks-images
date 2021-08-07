@@ -98,8 +98,10 @@ export default function App() {
   // };
 
   const onOpenModal = (e) => {
-    largeImageId(e.target.dataset.source);
-    toggleModal();
+    console.log(largeImageId);
+    console.log(e.target);
+    // largeImageId(e.target.dataset.source);
+    // toggleModal();
   };
 
   const toggleModal = () => {
