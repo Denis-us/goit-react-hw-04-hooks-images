@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from "./Modal.module.css";
 import PropTypes from "prop-types";
 
 const modalRoot = document.querySelector("#modal-root");
 
-export default function Modal({ children, onToggleModal }) {
+export default function Modal({ modalImage, onToggleModal }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.code === "Escape") {
@@ -28,7 +28,9 @@ export default function Modal({ children, onToggleModal }) {
 
   return createPortal(
     <div className={styles.Overlay} onClick={handleBackdropClick}>
-      <div className={styles.Modal}>{children}</div>
+      <div className={styles.Modal}>
+        <img src={modalImage} alt="" />
+      </div>
     </div>,
     modalRoot
   );

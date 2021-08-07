@@ -18,26 +18,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [largeImageId, setLargeImageId] = useState(null);
-  const [largeImage, setLargeImage] = useState([]);
-
-  // useEffect(() => {
-  //   if (!query) return;
-  //   const fetchImages = async () => {
-  //     try {
-  //       const request = await apiService(query, page);
-  //       if (request.length === 0) {
-  //         return setError(`No results were found for ${query}!`);
-  //       }
-  //       setImages(prevImages => [...prevImages, ...request]);
-  //     } catch (error) {
-  //       setError('Something went wrong. Try again.');
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchImages();
-  // }, [page, query]);
+  const [modalImg, setModalImg] = useState([]);
 
   useEffect(() => {
     if (search === "") {
@@ -66,9 +47,6 @@ export default function App() {
         setPictures((prevPictures) => [...prevPictures, ...pictures]);
         setCurrentPage(currentPage + 1);
       })
-
-      // return (pictures[0])
-      // });
       .catch((error) => {
         setError("Ошибка");
       })
@@ -85,12 +63,12 @@ export default function App() {
       });
   };
 
-  const findPicture = () => {
-    const largeImg = pictures.find((pictures) => {
-      return pictures.id === largeImageId;
-    });
-    return largeImg;
-  };
+  // const findPicture = () => {
+  //   const largeImg = pictures.find((pictures) => {
+  //     return pictures.id === largeImageId;
+  //   });
+  //   return largeImg;
+  // };
 
   // const openModal = (e) => {
   //     setShowModal(true),
@@ -98,11 +76,24 @@ export default function App() {
   // };
 
   const onOpenModal = (e) => {
-    console.log(largeImageId);
-    console.log(e.target);
-    // largeImageId(e.target.dataset.source);
-    // toggleModal();
+    if (e.target.nodeName !== "IMG") {
+      return;
+    }
+    setModalImg({
+      modalImg: e.target.dataset.img,
+    });
+    toggleModal();
   };
+
+  // const onImgClick = (e) => {
+  //   if (e.target.nodeName !== "IMG") {
+  //     return;
+  //   }
+  //   setModalImg({
+  //     modalImg: e.target.dataset.img,
+  //   });
+  //   toggleModal();
+  // };
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -114,11 +105,7 @@ export default function App() {
       <ImageGallery openModal={onOpenModal} pictures={pictures} />
       {loading && <CustomLoader />}
       {pictures.length > 0 && <Button fetchImages={fetchImagesWithScroll} />}
-      {showModal && (
-        <Modal onToggleModal={toggleModal}>
-          <img src={findPicture().largeImageURL} alt={findPicture().tags} />
-        </Modal>
-      )}
+      {showModal && <Modal onToggleModal={toggleModal} modalImage={modalImg} />}
       <ToastContainer autoClose={3000} />
     </div>
   );
