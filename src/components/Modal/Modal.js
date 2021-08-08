@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import styles from "./Modal.module.css";
 import PropTypes from "prop-types";
 
-const modalRoot = document.querySelector("#modal-root");
+const modalRoot = document.querySelector("#root");
 
 export default function Modal({ modalImage, onToggleModal }) {
   useEffect(() => {

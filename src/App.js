@@ -17,7 +17,6 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [largeImageId, setLargeImageId] = useState(null);
   const [modalImg, setModalImg] = useState([]);
 
   useEffect(() => {
@@ -64,12 +63,8 @@ export default function App() {
   };
 
   const onOpenModal = (e) => {
-    if (e.target.nodeName !== "IMG") {
-      return;
-    }
-    setModalImg({
-      modalImg: e.target.dataset.img,
-    });
+    setModalImg(e.target.dataset.img);
+
     toggleModal();
   };
 

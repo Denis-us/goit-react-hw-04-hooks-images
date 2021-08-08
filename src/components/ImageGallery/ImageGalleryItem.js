@@ -2,14 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./ImageGalleryItem.module.css";
 
-export default function ImageGalleryItem({ picture, openModal }) {
-  const { webformatURL, tags } = picture;
-
+export default function ImageGalleryItem({
+  id,
+  webformatURL,
+  tags,
+  largeImageURL,
+  openModal,
+}) {
   return (
-    <li id={picture.id} onClick={openModal} className={styles.ImageGalleryItem}>
+    <li id={id} onClick={openModal} className={styles.ImageGalleryItem}>
       <img
         src={webformatURL}
         alt={tags}
+        data-img={largeImageURL}
         className={styles.ImageGalleryItemImage}
       />
     </li>
@@ -17,7 +22,6 @@ export default function ImageGalleryItem({ picture, openModal }) {
 }
 
 ImageGalleryItem.propTypes = {
-  image: PropTypes.shape({
-    webformatURL: PropTypes.string,
-  }),
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
 };
