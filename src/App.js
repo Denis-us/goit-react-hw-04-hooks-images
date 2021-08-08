@@ -63,18 +63,6 @@ export default function App() {
       });
   };
 
-  // const findPicture = () => {
-  //   const largeImg = pictures.find((pictures) => {
-  //     return pictures.id === largeImageId;
-  //   });
-  //   return largeImg;
-  // };
-
-  // const openModal = (e) => {
-  //     setShowModal(true),
-  //     setLargeImageId(Number(e.currentTarget.id)),
-  // };
-
   const onOpenModal = (e) => {
     if (e.target.nodeName !== "IMG") {
       return;
@@ -84,16 +72,6 @@ export default function App() {
     });
     toggleModal();
   };
-
-  // const onImgClick = (e) => {
-  //   if (e.target.nodeName !== "IMG") {
-  //     return;
-  //   }
-  //   setModalImg({
-  //     modalImg: e.target.dataset.img,
-  //   });
-  //   toggleModal();
-  // };
 
   const toggleModal = () => {
     setShowModal(!showModal);
